@@ -82,10 +82,20 @@ else:
 
 
 # --- -------------------------------------------------------------------------------------------Data loading section --------------------------------------------------------------------------------------------------------------- ---
+sug_loc = 'https://storage.googleapis.com/sales_az/trixeo_santis_total_suggestions_09Apr25.parquet'
+sales_loc = 'https://storage.googleapis.com/sales_az/trixeo_total_sales_09Apr25.parquet'
+
+@st.cache_data(ttl=3600)
+def load_suggestions(address):
+    url = address
+    return pd.read_parquet(url, engine="pyarrow")
+
+# later in your code…
+suggestions = load_suggestions(sug_loc)
+sales = load_suggestions(sales_loc)
 
 # --- Load usage Data ---
-suggestions = pd.read_parquet('https://storage.googleapis.com/sales_az/trixeo_santis_total_suggestions_09Apr25.parquet')
-sales = pd.read_parquet('https://storage.googleapis.com/sales_az/trixeo_total_sales_09Apr25.parquet')
+
 
 r,top_group_month_wise, bottom_group_month_wise, fig_usage= utils.generate_usage(suggestions,quantiles=quantiles,usage_threshold=usage_threshold,content_type=content_type,usage_level=usage_level)
 

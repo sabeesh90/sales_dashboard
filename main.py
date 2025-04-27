@@ -84,7 +84,7 @@ else:
 # --- -------------------------------------------------------------------------------------------Data loading section --------------------------------------------------------------------------------------------------------------- ---
 
 # --- Load usage Data ---
-suggestions = pd.read_parquet('trixeo_santis_total_suggestions_09Apr25.parquet')
+suggestions = pd.read_parquet('temp.parquet')
 sales = pd.read_parquet('trixeo_total_sales_09Apr25.parquet')
 
 r,top_group_month_wise, bottom_group_month_wise, fig_usage= utils.generate_usage(suggestions,quantiles=quantiles,usage_threshold=usage_threshold,content_type=content_type,usage_level=usage_level)

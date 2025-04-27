@@ -24,12 +24,15 @@ st.markdown(
 # General Settings
 with st.sidebar.expander("⚙️ Usage Settings", expanded=True):
     # Quantiles
-    quantile_low = st.slider("Low quantile", 0.0, 1.0, 0.30, 0.05)
-    quantile_high = st.slider("High quantile", 0.0, 1.0, 0.70, 0.05)
+    quantile_low = st.slider("Low quantile", 0.0, 1.0, 0.20, 0.05)
+    quantile_high = st.slider("High quantile", 0.0, 1.0, 0.80, 0.05)
     quantiles = [quantile_low, quantile_high]
 
     # Usage Threshold
     usage_threshold = st.number_input("Usage Threshold", min_value=0, max_value=100, value=0)
+
+     # Usage Threshold
+    reg_threshold = st.number_input("reg Threshold", min_value=0, max_value=100, value=3)
 
     # Content Type
     content_type = st.selectbox("Content Type", options=[None, 'VAE', 'iDetail'])
@@ -93,7 +96,7 @@ sales_grouped_average,sales_grouped = utils.generate_sales(r, usage_level, sales
                                              rec_date, sales_level = sales_level, window = window)
 
 
-fig_avg, fig_roll = utils.generate_sales_graphs(sales_grouped_average_low, sales_grouped_average_high, sales_grouped_average_low_graph, sales_grouped_average_high_graph, window = window,rec_date=rec_date)
+fig_avg, fig_roll = utils.generate_sales_graphs(sales_grouped_average_low, sales_grouped_average_high, sales_grouped_average_low_graph, sales_grouped_average_high_graph, window = window,rec_date=rec_date,)
 
 # 1) Compute the true mins & maxes
 true_min_avg = min(
@@ -151,7 +154,8 @@ fig_roll.update_yaxes(range=[min_roll, max_roll])
 
 diff, history, forecast, viz, diff_fig = utils.project_difference_in_rolling_mean(
     sales_grouped_average_low_graph,
-    sales_grouped_average_high_graph
+    sales_grouped_average_high_graph,
+    reg_threshold=reg_threshold
 )
 
 # --------------------------------------------------------------------------------------------- Dashboard Layout -------------------------------------------------------------------------------------------------------------------------------

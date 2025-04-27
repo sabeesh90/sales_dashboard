@@ -412,7 +412,8 @@ import plotly.graph_objects as go
 
 def project_difference_in_rolling_mean(
     sales_low_graph: pd.DataFrame,
-    sales_high_graph: pd.DataFrame
+    sales_high_graph: pd.DataFrame,
+    reg_threshold=0
 ):
     """
     Returns:
@@ -485,7 +486,7 @@ def project_difference_in_rolling_mean(
      # 6) Now take the last N rows of that pre_rec, where N==regression_time
     
     if regression_time > 0 and len(pre_rec) >= regression_time:
-        history = pre_rec.tail(regression_time).reset_index(drop=True)
+        history = pre_rec.tail(regression_time-reg_threshold).reset_index(drop=True)
     else:
         # if there aren’t enough points, just use whatever we have
         history = pre_rec.copy()
@@ -580,12 +581,14 @@ def project_difference_in_rolling_mean(
         showarrow=False,
         font=dict(size=12), bgcolor="white", bordercolor="black"
     )
+    ann_color = "darkgreen" if pct_increase >= 0 else "red"
+
     fig.add_annotation(
         x=forecast['sales_month'].iloc[-1],
         y=last_proj,
-        text=f"+{pct_increase:.1f}% since rec_date",
+        text=f"{pct_increase:.1f}% since rec_date",
         showarrow=True, arrowhead=2, ax=0, ay=-30,
-        font=dict(color="darkgreen", size=12),
+        font=dict(color="darkgreen", size=12),arrowcolor=ann_color,
         bgcolor="white", bordercolor="darkgreen"
     )
     fig.update_layout(
